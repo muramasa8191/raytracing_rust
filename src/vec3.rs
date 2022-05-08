@@ -1,4 +1,5 @@
 use std::ops::{Add, Sub, Mul, Div, AddAssign, MulAssign, DivAssign, Neg};
+use crate::core;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub struct Vec3 {
@@ -113,6 +114,44 @@ impl Vec3 {
         Vec3 {x, y, z}
     }
 
+    pub fn random_vec3() -> Vec3 {
+        Vec3::new(core::random_f64(), core::random_f64(), core::random_f64())
+    }
+
+    pub fn random_range_vec3(min: f64, max: f64) -> Vec3 {
+        Vec3::new(
+            core::random_range_f64(min, max),
+            core::random_range_f64(min, max),
+            core::random_range_f64(min, max)
+        )
+    }
+
+    pub fn random_in_unit_sphere() -> Vec3 {
+        loop {
+            let p = Vec3::random_range_vec3(-1.0, 1.0);
+            if p.length_squared() < 1.0 {
+                return p;
+            }
+        }
+    }
+
+    pub fn random_unit_vector() -> Vec3 {
+        Vec3::random_in_unit_sphere().unit_vector()
+    }
+
+    // pub fn random_in_hemisphere(normal: &Vec3) -> Vec3 {
+    //     let in_unit_sphere = random_unit_vector();
+    //     if (Vec3::dot(in_unit_sphere, normal) > 0.0) {
+    //         in_unit_sphere
+    //     } else {
+    //         -in_unit_sphere
+    //     }
+    // }
+
+    pub fn reflect(v: Vec3, n: Vec3) -> Vec3 {
+        v - 2.0 * Vec3::dot(v, n) * n
+    }
+
     pub fn length_squared(&self) -> f64 {
         self.x * self.x + self.y * self.y + self.z * self.z
     }
@@ -137,6 +176,11 @@ impl Vec3 {
         *self / self.length()
     }
 
+    pub fn near_zero(&self) -> bool {
+        let s: f64 = 1e-8;
+        self.x.abs() < s && self.y.abs() < s && self.z < s
+    }
+
     pub fn x(&self) -> f64 {
         self.x
     }
@@ -153,6 +197,13 @@ impl Vec3 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn random_unit_vector_test() {
+        let v1 = Vec3::random_unit_vector();
+
+        assert!(v1.length_squared() < 1.0);
+    }
 
     #[test]
     fn add_test() {

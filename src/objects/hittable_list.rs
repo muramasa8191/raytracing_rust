@@ -1,7 +1,8 @@
 use crate::core::{HitTable, HitRecord};
 use crate::core::ray::Ray;
 
-pub struct HitTableList<T: HitTable> {
+pub struct HitTableList<T>
+    where T: HitTable {
     objects: Vec<T>,
 }
 
@@ -28,9 +29,9 @@ impl <T> HitTable for HitTableList<T>
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
         let mut hit_anything = false;
         let mut closest_so_far = t_max;
+        let mut hit_rec = Default::default();
 
         for object in self.objects.iter() {
-            let mut hit_rec: HitRecord = Default::default();
             if object.hit(ray, t_min, closest_so_far, &mut hit_rec) {
                 hit_anything = true;
                 closest_so_far = rec.t;

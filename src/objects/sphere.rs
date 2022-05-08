@@ -1,18 +1,21 @@
 use crate::core::{HitTable, HitRecord};
 use crate::core::ray::Ray;
 use crate::vec3::{Vec3, Point3};
+use crate::objects::MaterialType;
 
 #[derive(Default)]
 pub struct Sphere {
     center: Point3,
     radius: f64,
+    material: MaterialType,
 }
 
 impl Sphere {
-    pub fn new(x: f64, y: f64, z: f64, radius: f64) -> Self {
+    pub fn new(x: f64, y: f64, z: f64, radius: f64, material: MaterialType) -> Self {
         Sphere {
             center: Point3::new(x, y, z),
             radius,
+            material,
         }
     }
 }
@@ -38,6 +41,7 @@ impl HitTable for Sphere {
         }
         rec.t = root;
         rec.p = ray.at(rec.t);
+        rec.material = self.material;
         let outward_normal = (rec.p - self.center) / self.radius;
         rec.set_face_normal(&ray, outward_normal);
 

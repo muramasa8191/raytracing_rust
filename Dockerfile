@@ -9,3 +9,8 @@ RUN curl -o rustup.rs --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
  && rm -f rustup.rs 
 
 ENV PATH=$PATH:/root/.cargo/bin
+
+ADD . /raytracing
+WORKDIR /raytracing
+
+RUN cargo build

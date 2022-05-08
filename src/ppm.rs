@@ -3,6 +3,7 @@ use std::io::prelude::*;
 use std::path::Path;
 
 use crate::vec3::Color;
+use crate::core::clamp;
 
 #[derive(Debug, Clone)]
 pub enum Pixel {
@@ -35,11 +36,23 @@ impl Image {
         self.buffer[(y*self.width+x) as usize] = rgb;
     }
 
-    pub fn set_color(&mut self, y: u32, x: u32, color: &Color) {
-        let r: u8 = (255.999 * color.x()) as u8;
-        let g: u8 = (255.999 * color.y()) as u8;
-        let b: u8 = (255.999 * color.z()) as u8;
-        self.buffer[(y*self.width+x) as usize] = Pixel::Rgb([r, g, b]);
+    pub fn set_color(&mut self, y: u32, x: u32, color: &Color, samples_per_pixel: u32) {
+        let mut r = color.x();
+        let mut g = color.y();
+        let mut b = color.z();
+
+        let scale = 1.0 / samples_per_pixel as f64;
+        r = (scale * r).sqrt();
+        g = (scale * g).sqrt();
+        b = (scale * b).sqrt();
+
+        let rgb = Pixel::Rgb([
+            (256.0 * clamp(r, 0.0, 0.999)) as u8,
+            (256.0 * clamp(g, 0.0, 0.999)) as u8,
+            (256.0 * clamp(b, 0.0, 0.999)) as u8
+            ]
+        );
+        self.buffer[(y*self.width+x) as usize] = rgb;
     }
 
     pub fn save<P: AsRef<Path>>(&self, path: P) -> std::io::Result<()> {
