@@ -24,4 +24,8 @@ Run the project with cargo on docker container.
 $ docker run --rm -it raytracing_rust cargo run
 ```
 
+If you want to change some code, kick the command below on the root directory.
 
+```console
+$ docker run --rm -it -v ${PWD}:/raytracing raytracing_rust cargo run
+```
