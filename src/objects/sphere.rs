@@ -32,9 +32,9 @@ impl HitTable for Sphere {
             return false;
         }
         let sqrtd = discriminant.sqrt();
-        let mut root = (-half_b - sqrtd) / a;
+        let mut root = ((-half_b) - sqrtd) / a;
         if root < t_min || t_max < root {
-            root = (-half_b + sqrtd) / a;
+            root = ((-half_b) + sqrtd) / a;
             if root < t_min || t_max < root {
                 return false;
             }
@@ -45,6 +45,6 @@ impl HitTable for Sphere {
         let outward_normal = (rec.p - self.center) / self.radius;
         rec.set_face_normal(&ray, outward_normal);
 
-        return true;
+        true
     }
 }

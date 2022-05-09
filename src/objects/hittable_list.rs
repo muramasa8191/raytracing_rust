@@ -34,7 +34,7 @@ impl <T> HitTable for HitTableList<T>
         for object in self.objects.iter() {
             if object.hit(ray, t_min, closest_so_far, &mut hit_rec) {
                 hit_anything = true;
-                closest_so_far = rec.t;
+                closest_so_far = hit_rec.t;
                 *rec = hit_rec;
             }
         }
