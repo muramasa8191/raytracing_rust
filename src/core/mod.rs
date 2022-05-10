@@ -1,18 +1,25 @@
 use rand::Rng;
+use std::sync::Arc;
 
 use crate::core::ray::Ray;
-use crate::vec3::{Vec3, Point3, Color};
 use crate::objects::MaterialType;
+use crate::vec3::{Color, Point3, Vec3};
 
-pub mod ray;
 pub mod camera;
+pub mod ray;
 
 pub trait HitTable {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool;
 }
 
 pub trait Material {
-    fn scatter(&self, r_in: &Ray, hit_record: &HitRecord, attenuation: &mut Color, scattered: &mut Ray) -> bool;
+    fn scatter(
+        &self,
+        r_in: &Ray,
+        hit_record: &HitRecord,
+        attenuation: &mut Color,
+        scattered: &mut Ray,
+    ) -> bool;
 }
 
 #[derive(Clone, Copy, Default)]
@@ -24,7 +31,7 @@ pub struct HitRecord {
     pub front_face: bool,
 }
 
-impl HitRecord {    
+impl HitRecord {
     pub fn set_face_normal(&mut self, ray: &Ray, outward_normal: Vec3) {
         self.front_face = Vec3::dot(ray.direction(), outward_normal) < 0.0;
         self.normal = if self.front_face {
@@ -35,8 +42,10 @@ impl HitRecord {
     }
 }
 
-pub fn ray_color<T>(ray: Ray, world: &T, depth: u32) -> Color 
-        where T: HitTable {
+pub fn ray_color<T>(ray: Ray, world: &Arc<T>, depth: u32) -> Color
+where
+    T: HitTable,
+{
     if depth <= 0 {
         return Color::new(0.0, 0.0, 0.0);
     }
@@ -64,7 +73,6 @@ pub fn ray_color<T>(ray: Ray, world: &T, depth: u32) -> Color
     let t = 0.5 * (unit_direction.y() + 1.0);
     (1.0 - t) * Color::new(1.0, 1.0, 1.0) + t * Color::new(0.5, 0.7, 1.0)
 }
-
 
 pub fn random_f64() -> f64 {
     rand::thread_rng().gen_range(0.0..1.0)

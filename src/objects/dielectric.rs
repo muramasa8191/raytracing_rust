@@ -1,5 +1,5 @@
-use crate::core::{random_f64, HitRecord, Material};
 use crate::core::ray::Ray;
+use crate::core::{random_f64, HitRecord, Material};
 use crate::vec3::{Color, Vec3};
 
 #[derive(Clone, Copy)]
@@ -8,7 +8,13 @@ pub struct Dielectric {
 }
 
 impl Material for Dielectric {
-    fn scatter(&self, r_in: &Ray, rec: &HitRecord, attenuation: &mut Color, scattered: &mut Ray) -> bool {
+    fn scatter(
+        &self,
+        r_in: &Ray,
+        rec: &HitRecord,
+        attenuation: &mut Color,
+        scattered: &mut Ray,
+    ) -> bool {
         *attenuation = Color::new(1.0, 1.0, 1.0);
         let refraction_ratio = if rec.front_face {
             1.0 / self.ir
@@ -22,7 +28,9 @@ impl Material for Dielectric {
 
         let cannot_refract = refraction_ratio * sin_theta > 1.0;
 
-        let direction = if cannot_refract || Dielectric::reflectance(cos_theta, refraction_ratio) > random_f64() {
+        let direction = if cannot_refract
+            || Dielectric::reflectance(cos_theta, refraction_ratio) > random_f64()
+        {
             Vec3::reflect(unit_direction, rec.normal)
         } else {
             Vec3::refract(unit_direction, rec.normal, refraction_ratio)
@@ -36,9 +44,7 @@ impl Material for Dielectric {
 
 impl Dielectric {
     pub fn new(ir: f64) -> Dielectric {
-        Dielectric {
-            ir,
-        }
+        Dielectric { ir }
     }
 
     fn reflectance(cosine: f64, ref_idx: f64) -> f64 {

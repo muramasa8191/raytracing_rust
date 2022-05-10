@@ -1,7 +1,7 @@
-use crate::core::{HitTable, HitRecord};
 use crate::core::ray::Ray;
-use crate::vec3::{Vec3, Point3};
+use crate::core::{HitRecord, HitTable};
 use crate::objects::MaterialType;
+use crate::vec3::{Point3, Vec3};
 
 #[derive(Default)]
 pub struct Sphere {
@@ -27,7 +27,7 @@ impl HitTable for Sphere {
         let half_b = Vec3::dot(oc, ray.direction());
         let c = oc.length_squared() - self.radius * self.radius;
 
-        let discriminant = half_b * half_b - a * c;    
+        let discriminant = half_b * half_b - a * c;
         if discriminant < 0.0 {
             return false;
         }

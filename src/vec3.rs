@@ -1,5 +1,5 @@
-use std::ops::{Add, Sub, Mul, Div, AddAssign, MulAssign, DivAssign, Neg};
 use crate::core;
+use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub};
 
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub struct Vec3 {
@@ -18,7 +18,7 @@ impl Add for Vec3 {
         Vec3 {
             x: self.x + rhs.x,
             y: self.y + rhs.y,
-            z: self.z + rhs.z, 
+            z: self.z + rhs.z,
         }
     }
 }
@@ -60,7 +60,7 @@ impl Mul<f64> for Vec3 {
 
 impl Mul<Vec3> for f64 {
     type Output = Vec3;
-    fn mul(self, rhs: Vec3) ->Vec3 {
+    fn mul(self, rhs: Vec3) -> Vec3 {
         rhs * self
     }
 }
@@ -102,16 +102,16 @@ impl Neg for Vec3 {
     type Output = Self;
     fn neg(self) -> Self {
         Vec3 {
-            x: - self.x,
-            y: - self.y,
-            z: - self.z,
+            x: -self.x,
+            y: -self.y,
+            z: -self.z,
         }
     }
 }
 
 impl Vec3 {
     pub fn new(x: f64, y: f64, z: f64) -> Vec3 {
-        Vec3 {x, y, z}
+        Vec3 { x, y, z }
     }
 
     pub fn random_vec3() -> Vec3 {
@@ -122,7 +122,7 @@ impl Vec3 {
         Vec3::new(
             core::random_range_f64(min, max),
             core::random_range_f64(min, max),
-            core::random_range_f64(min, max)
+            core::random_range_f64(min, max),
         )
     }
 
@@ -144,10 +144,10 @@ impl Vec3 {
             let p = Vec3::new(
                 core::random_range_f64(-1.0, 1.0),
                 core::random_range_f64(-1.0, 1.0),
-                0.0
+                0.0,
             );
             if p.length_squared() < 1.0 {
-                return p
+                return p;
             }
         }
     }

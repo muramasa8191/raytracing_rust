@@ -1,18 +1,19 @@
-use crate::core::{HitTable, HitRecord};
 use crate::core::ray::Ray;
+use crate::core::{HitRecord, HitTable};
 
 pub struct HitTableList<T>
-    where T: HitTable {
+where
+    T: HitTable,
+{
     objects: Vec<T>,
 }
 
-impl <T> HitTableList<T> 
-    where T: HitTable {
-
+impl<T> HitTableList<T>
+where
+    T: HitTable,
+{
     pub fn new() -> HitTableList<T> {
-        HitTableList {
-            objects: vec![],
-        }
+        HitTableList { objects: vec![] }
     }
 
     pub fn clear(&mut self) {
@@ -24,8 +25,10 @@ impl <T> HitTableList<T>
     }
 }
 
-impl <T> HitTable for HitTableList<T> 
-    where T: HitTable {
+impl<T> HitTable for HitTableList<T>
+where
+    T: HitTable,
+{
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
         let mut hit_anything = false;
         let mut closest_so_far = t_max;
